@@ -3,7 +3,6 @@
 :: Yönetici yetkisi kontrolü
 net session >nul 2>&1
 if %errorLevel% neq 0 (
-    echo Yönetici yetkisi gerekli. Yeniden başlatılıyor...
     powershell -Command "Start-Process '%~0' -Verb RunAs"
     exit /b
 )
