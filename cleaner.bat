@@ -84,7 +84,7 @@ del "C:\Riot Games\Riot Client\X\natives_blob.bin" /f /q
 del "C:\Riot Games\Riot Client\X\icdtl.dat" /f /q
 del "C:\Riot Games\Riot Client\X\Plgins\plgin-manifest.json" /f /q
 del /s /q "C:\Windows\vgkbootstats.dat"
-reg delete "HKEY_LOCAL_MACHINE\SYSTEM\HardwareConfig" /f
+:: reg delete "HKEY_LOCAL_MACHINE\SYSTEM\HardwareConfig" /f
 del /s /q /f "%systemdrive%\$Recycle.bin"
 del /s /q "D:\System Volume Information\tracking.log"
 del /s /q "C:\Windows\win.ini"
