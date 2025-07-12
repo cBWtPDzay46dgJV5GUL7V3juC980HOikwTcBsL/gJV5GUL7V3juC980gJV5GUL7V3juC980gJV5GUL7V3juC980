@@ -1071,3 +1071,29 @@ PowerShell -ExecutionPolicy Unrestricted -Command "$pathGlobPattern = "^""%WINDI
 PowerShell -ExecutionPolicy Unrestricted -Command "$serviceName = 'DPS'; $stateFilePath = '%APPDATA%\privacy.sexy-DPS'; $expandedStateFilePath = [System.Environment]::ExpandEnvironmentVariables($stateFilePath); if (-not (Test-Path -Path $expandedStateFilePath)) { Write-Host "^""Skipping starting the service: It was not running before."^""; } else { try { Remove-Item -Path $expandedStateFilePath -Force -ErrorAction Stop; Write-Host 'The service is expected to be started.'; } catch { Write-Warning "^""Failed to delete the service state file `"^""$expandedStateFilePath`"^"": $_"^""; }; }; $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue; if (!$service) { throw "^""Failed to start service `"^""$serviceName`"^"": Service not found."^""; }; if ($service.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) { Write-Host "^""Skipping, `"^""$serviceName`"^"" is already running, no need to start."^""; exit 0; }; Write-Host "^""`"^""$serviceName`"^"" is not running, starting it."^""; try { $service | Start-Service -ErrorAction Stop; Write-Host "^""Successfully started the service: `"^""$serviceName`"^""."^""; } catch { Write-Warning "^""Failed to start the service: `"^""$serviceName`"^""."^""; exit 1; }"
 :: ----------------------------------------------------------
 exit
+
+
+for /f %%i in ('powershell -Command "[System.IO.Path]::GetRandomFileName().Substring(0,8).ToUpper()"') do set NEWPCNAME=PC-%%i
+WMIC COMPUTERSYSTEM WHERE Name="%COMPUTERNAME%" CALL Rename Name="%NEWPCNAME%"
+
+
+SETLOCAL ENABLEDELAYEDEXPANSION
+SETLOCAL ENABLEEXTENSIONS
+FOR /F "tokens=1" %%a IN ('wmic nic where physicaladapter^=true get deviceid ^| findstr [0-9]') DO (
+    CALL :MAC
+    FOR %%b IN (0 00 000) DO (
+        REG QUERY HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a >NUL 2>NUL && REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a /v NetworkAddress /t REG_SZ /d !MAC!  /f >NUL 2>NUL
+    )
+)
+GOTO :EOF
+
+:MAC
+SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
+SET CHARS=123456789ABCDEF
+SET "MAC="
+FOR /L %%i IN (1,1,12) DO (
+    SET /A INDEX=!RANDOM! %% 15
+    FOR %%j IN (!INDEX!) DO SET "MAC=!MAC!!CHARS:~%%j,1!"
+)
+ENDLOCAL & SET "MAC=%MAC%"
+EXIT /B
