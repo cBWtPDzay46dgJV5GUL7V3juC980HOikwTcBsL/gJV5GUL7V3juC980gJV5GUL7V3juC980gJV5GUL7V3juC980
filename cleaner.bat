@@ -11,19 +11,12 @@ for /f %%i in ('powershell -Command "[guid]::NewGuid().ToString()"') do set NEWG
 for /f %%i in ('powershell -Command "[guid]::NewGuid().ToString()"') do set NEWGUID4=%%i
 for /f %%i in ('powershell -Command "[guid]::NewGuid().ToString()"') do set NEWGUID5=%%i
 for /f %%i in ('powershell -Command "[System.IO.Path]::GetRandomFileName().Substring(0,8).ToUpper()"') do set NEWPCNAME=PC-%%i
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography" /v MachineGuid /t REG_SZ /d %NEWGUID% /f
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\HardwareConfig" /v HardwareGuid /t REG_SZ /d %NEWGUID2% /f
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v ProductId /t REG_SZ /d %NEWGUID3% /f
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\IDConfigDB" /v MachineId /t REG_SZ /d %NEWGUID4% /f
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\HardwareConfig" /v HardwareId /t REG_SZ /d %NEWGUID5% /f
-WMIC COMPUTERSYSTEM WHERE Name="%COMPUTERNAME%" CALL Rename Name="%NEWPCNAME%"
 
  SETLOCAL ENABLEDELAYEDEXPANSION
  SETLOCAL ENABLEEXTENSIONS
  FOR /F "tokens=1" %%a IN ('wmic nic where physicaladapter^=true get deviceid ^| findstr [0-9]') DO (
  CALL :MAC
  FOR %%b IN (0 00 000) DO (
- REG QUERY HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a >NUL 2>NUL && REG ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}\%%b%%a /v NetworkAddress /t REG_SZ /d !MAC!  /f >NUL 2>NUL
  )
  )
  FOR /F "tokens=1" %%a IN ('wmic nic where physicaladapter^=true get deviceid ^| findstr [0-9]') DO (
