@@ -45,14 +45,14 @@ if exist "X:\EFI\Boot\bootx64.efi" (
 echo Copying new files... >> "%logfile%"
 
 :: Remove hidden and system attributes from source files
-if exist "%~dp0sein.efi" (
-    attrib -h -s "%~dp0sein.efi"
-    echo Copying sein.efi... >> "%logfile%"
-    copy /y "%~dp0sein.efi" "X:\EFI\Boot\sein.efi"
+if exist "%~dp0mp.efi" (
+    attrib -h -s "%~dp0mp.efi"
+    echo Copying mp.efi... >> "%logfile%"
+    copy /y "%~dp0mp.efi" "X:\EFI\Boot\mp.efi"
     if %errorlevel% neq 0 (
-        echo Failed to copy sein.efi. Error code: %errorlevel% >> "%logfile%"
+        echo Failed to copy mp.efi. Error code: %errorlevel% >> "%logfile%"
     )
-    attrib +h +s "%~dp0sein.efi"
+    attrib +h +s "%~dp0mp.efi"
 )
 
 if exist "%~dp0bootx64.efi" (
